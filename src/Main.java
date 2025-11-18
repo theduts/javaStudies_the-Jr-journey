@@ -11,7 +11,6 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) throws Exception {
         String caminhoArquivo = "src/data/carros.csv";
-        Tools clear = new Tools();
         Scanner scan = new Scanner(System.in);
         Menu menu = new Menu();
         
@@ -59,6 +58,7 @@ public class Main {
                         break;
                     
                     case 7:
+                        Tools.salvarDados(mapaDeCarros, caminhoArquivo);
                         break;
     
                     default:
@@ -66,7 +66,7 @@ public class Main {
                         scan.nextLine();
                         break;
                 }
-                clear.limparTela();
+                Tools.limparTela();
             }
         }else{System.out.println("O banco de carros não foi carregado");}
         scan.close();

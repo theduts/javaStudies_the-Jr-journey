@@ -2,7 +2,10 @@ package controller;
 import java.util.Scanner;
 import exceptions.CarroNaoEncontradoException;
 import model.Carro;
+import utils.Tools;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class CRUD {
@@ -11,6 +14,7 @@ public class CRUD {
 
     // --------------------------------------------------CREATE
     public void createCarro(Map<String, Carro> mapaDeCarros) {
+        LocalDate anoDeCadastro = LocalDate.now();
         System.out.println("Digite o modelo do carro:");
         String novoModelo = scan.nextLine();
         System.out.println("Digite a marca do carro:");
@@ -19,9 +23,12 @@ public class CRUD {
         int novoAno = scan.nextInt();
         scan.nextLine(); // Consome o "Enter" que o nextInt() deixou
 
-        Carro novoCarro = new Carro(novoModelo, novaMarca, novoAno);
+        Carro novoCarro = new Carro(novoModelo, novaMarca, novoAno, anoDeCadastro);
         mapaDeCarros.put(novoModelo, novoCarro);
         System.out.println("Carro cadastrado.");
+        
+        String mensagemLog = "CARRO "+ novoModelo +" CRIADO";
+        Tools.log(mensagemLog);
     }
 
     // --------------------------------------------------READ
@@ -40,11 +47,14 @@ public class CRUD {
         String modelo = carroAlvo.getModelo();
         String marca = carroAlvo.getMarca();
         int ano = carroAlvo.getAno();
+        LocalDate dataCadastro = carroAlvo.getDataCadastro();
 
         System.out.println("----- Informações do " + modelo + " -----");
         System.out.println("Modelo: " + modelo);
         System.out.println("Marca: " + marca);
         System.out.println("Ano: " + ano);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        System.out.println("Data do cadastro: " + dataCadastro.format(formatter));
         System.out.println("-".repeat(33));
     }
 
@@ -55,15 +65,24 @@ public class CRUD {
         try {
             Carro carroEncontrado = this.busca(modeloBuscado, mapaDeCarros);
             this.imprimirInfo(carroEncontrado);
+            
+            String mensagemLog = "CARRO "+ carroEncontrado.getModelo() +" BUSCADO";
+            Tools.log(mensagemLog);
 
         } catch (CarroNaoEncontradoException e) {
             System.out.println("Carro não encontrado.");
+            
+            String mensagemLog = "FALHA NO BUSCA DO CARRO";
+            Tools.log(mensagemLog);
         }
     }
 
     public void readTodosOsCarros(Map<String, Carro> mapaDeCarros) {
         System.out.println("---- Informações dos carros ----");
         mapaDeCarros.forEach((modelo, carro) -> System.out.println(carro + "\n" + "-".repeat(30)));
+    
+        String mensagemLog = "TODOS OS CARROS BUSCADOS";
+        Tools.log(mensagemLog);
     }
     
     public void readCarrosPorMarca(Map<String, Carro> mapaDeCarros){
@@ -73,6 +92,9 @@ public class CRUD {
         mapaDeCarros.values().stream()
             .filter(c -> c.getMarca().equalsIgnoreCase(marcaBuscada))
             .forEach(System.out::println);
+
+        String mensagemLog = "CARROS DA MARCA "+ marcaBuscada +" BUSCADOS";
+        Tools.log(mensagemLog);
     }
 
     // --------------------------------------------------UPDATE
@@ -107,8 +129,14 @@ public class CRUD {
             System.out.println("Carro atualizado com sucesso!");
             System.out.println("Novos dados: " + setCarro);
 
+            String mensagemLog = "CARRO "+ setCarro.getModelo() +" ALTERADO";
+            Tools.log(mensagemLog);
+
         } catch (CarroNaoEncontradoException e) {
             System.out.println("Carro não encontrado.");
+
+            String mensagemLog = "FALHA DA ALTERAÇÃO DO CARRO " + modeloBuscado;
+            Tools.log(mensagemLog);
         }
     }
 
@@ -123,8 +151,14 @@ public class CRUD {
             mapaDeCarros.remove(modeloBuscado);
             System.out.println("Carro removido.");
 
+            String mensagemLog = "CARRO " + modeloBuscado + " REMOVIDO";
+            Tools.log(mensagemLog);
+
         } catch (CarroNaoEncontradoException e) {
             System.out.println("Carro não encontrado.");
+
+            String mensagemLog = "FALHA NA REMOÇÂO DO MODELO " + modeloBuscado;
+            Tools.log(mensagemLog);
         }
 
     }

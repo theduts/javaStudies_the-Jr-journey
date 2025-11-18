@@ -3,6 +3,7 @@ package utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import model.Carro;
 
@@ -25,7 +26,7 @@ public class CarroLoader {
                 // Divide corretamente os dados — ajusta conforme o separador do CSV
                 String[] dados = linha.trim().split("[,;]"); // aceita vírgula OU ponto e vírgula
 
-                if (dados.length != 3) {
+                if (dados.length != 4) {
                     System.out.println("Linha inválida ignorada: " + linha);
                     continue;
                 }
@@ -33,8 +34,10 @@ public class CarroLoader {
                 String modelo = dados[0].trim();
                 String marca = dados[1].trim();
                 int ano = Integer.parseInt(dados[2].trim().replaceAll("[^0-9]", "")); // garante que só números vão
+                String dataString = dados[3].trim();
+                LocalDate dataCadastro = LocalDate.parse(dataString);
 
-                Carro carro = new Carro(modelo, marca, ano);
+                Carro carro = new Carro(modelo, marca, ano, dataCadastro);
                 mapaDeCarros.put(modelo, carro);
             }
 

@@ -8,7 +8,7 @@ public class Menu {
         System.out.println("4 - Editar carro");
         System.out.println("5 - Remover carro");
         System.out.println("6 - Buscar por marca");
-        System.out.println("7 - Sair");
+        System.out.println("7 - Salvar e Sair");
         System.out.println("------------------------");
     }
 }

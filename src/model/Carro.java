@@ -1,16 +1,21 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Carro {
 
     String modelo;
     String marca;
     int ano;
+    LocalDate dataCadastro;
 
     // -----------------------------------SETTER
-    public Carro(String modelo, String marca, int ano) {
+    public Carro(String modelo, String marca, int ano, LocalDate dataCadastro) {
         this.modelo = modelo;
         this.marca = marca;
         this.ano = ano;
+        this.dataCadastro = dataCadastro;
     }
 
     public void setModelo(String novoModelo) {
@@ -23,6 +28,10 @@ public class Carro {
 
     public void setAno(int novoAno) {
         this.ano = novoAno;
+    }
+
+    public void setDataCadastro(LocalDate novoDataCadastro) {
+        this.dataCadastro = novoDataCadastro;
     }
 
     // -----------------------------------GETTERS
@@ -38,22 +47,21 @@ public class Carro {
         return this.ano;
     }
 
+    public LocalDate getDataCadastro() {
+        return this.dataCadastro;
+    }
+
     // -----------------------------------MÉTODOS
-    public void metodoAcelerar() {
-        System.out.println(this.modelo + " acelerando");
-    }
-
-    public void metodoFreiar() {
-        System.out.println(this.modelo + " freiando");
-    }
-
-    public void metodoTrocarMarcha() {
-        System.out.println(this.modelo + " trocando marcha");
-    }
 
     // POLIMORFISMO DA toString() PARA AUXILIAR O println
     @Override
     public String toString() {
-        return "Modelo: " + this.modelo + "\nMarca: " + this.marca + "\nAno: " + this.ano;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "Modelo: " + this.modelo + "\nMarca: " + this.marca + "\nAno: " + this.ano + "\nData de cadastro: " + this.dataCadastro.format(formatter);
+    }
+
+    public String toFileString() {
+        // Retorna uma string simples no formato CSV - Ex: "Fusca,Volkswagen,1996,2025-11-17"
+        return this.modelo + "," + this.marca + "," + this.ano + "," + this.dataCadastro;
     }
 }
