@@ -1,12 +1,11 @@
 package controller;
 import java.util.Scanner;
-import exceptions.CarroNaoEncontradoException;
 import model.Carro;
 import utils.Tools;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Optional;
 
 public class CRUD {
 
@@ -14,33 +13,42 @@ public class CRUD {
 
     // --------------------------------------------------CREATE
     public void createCarro(Map<String, Carro> mapaDeCarros) {
+        
+        
         LocalDate anoDeCadastro = LocalDate.now();
         System.out.println("Digite o modelo do carro:");
         String novoModelo = scan.nextLine();
         System.out.println("Digite a marca do carro:");
         String novaMarca = scan.nextLine();
-        System.out.println("Digite o ano do carro:");
-        int novoAno = scan.nextInt();
-        scan.nextLine(); // Consome o "Enter" que o nextInt() deixou
+
+        int novoAno = 0;
+        boolean inputValido = false;
+
+        while(!inputValido){
+            System.out.println("Digite o ano do carro:");
+            String anoString = scan.nextLine();
+
+            try {
+                novoAno = Integer.parseInt(anoString);
+                inputValido = true;
+            } catch (Exception e) {
+                System.out.println("O ano deve ser um número!");
+                scan.nextLine();
+            }
+        }
 
         Carro novoCarro = new Carro(novoModelo, novaMarca, novoAno, anoDeCadastro);
         mapaDeCarros.put(novoModelo, novoCarro);
         System.out.println("Carro cadastrado.");
         
-        String mensagemLog = "CARRO "+ novoModelo +" CRIADO";
-        Tools.log(mensagemLog);
+        Tools.log("CARRO "+ novoModelo +" CRIADO");
     }
 
     // --------------------------------------------------READ
     
-    public Carro busca(String modeloBuscado, Map<String, Carro> mapaDeCarros) throws CarroNaoEncontradoException {
-
+    public Optional<Carro> busca(String modeloBuscado, Map<String, Carro> mapaDeCarros){
         Carro carro = mapaDeCarros.get(modeloBuscado);
-
-        if (carro == null) {
-            throw new CarroNaoEncontradoException(); 
-        }
-        return carro;
+        return Optional.ofNullable(carro);
     }
     
     public void imprimirInfo(Carro carroAlvo) {
@@ -62,18 +70,18 @@ public class CRUD {
         System.out.println("Digite o modelo do carro que deseja buscar:");
         String modeloBuscado = scan.nextLine();
         
-        try {
-            Carro carroEncontrado = this.busca(modeloBuscado, mapaDeCarros);
-            this.imprimirInfo(carroEncontrado);
-            
-            String mensagemLog = "CARRO "+ carroEncontrado.getModelo() +" BUSCADO";
-            Tools.log(mensagemLog);
+        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
 
-        } catch (CarroNaoEncontradoException e) {
+        carro.ifPresent(carroEncontrado -> {
+            this.imprimirInfo(carroEncontrado);
+            Tools.log("CARRO "+ carroEncontrado.getModelo() +" BUSCADO");
+
+        });
+
+        if(carro.isEmpty()){
             System.out.println("Carro não encontrado.");
             
-            String mensagemLog = "FALHA NO BUSCA DO CARRO";
-            Tools.log(mensagemLog);
+            Tools.log("FALHA NO BUSCA DO CARRO");
         }
     }
 
@@ -81,8 +89,7 @@ public class CRUD {
         System.out.println("---- Informações dos carros ----");
         mapaDeCarros.forEach((modelo, carro) -> System.out.println(carro + "\n" + "-".repeat(30)));
     
-        String mensagemLog = "TODOS OS CARROS BUSCADOS";
-        Tools.log(mensagemLog);
+        Tools.log("TODOS OS CARROS BUSCADOS");
     }
     
     public void readCarrosPorMarca(Map<String, Carro> mapaDeCarros){
@@ -93,8 +100,7 @@ public class CRUD {
             .filter(c -> c.getMarca().equalsIgnoreCase(marcaBuscada))
             .forEach(System.out::println);
 
-        String mensagemLog = "CARROS DA MARCA "+ marcaBuscada +" BUSCADOS";
-        Tools.log(mensagemLog);
+        Tools.log("CARROS DA MARCA "+ marcaBuscada +" BUSCADOS");
     }
 
     // --------------------------------------------------UPDATE
@@ -102,9 +108,9 @@ public class CRUD {
         System.out.println("Digite o modelo do carro que deseja alterar:");
         String modeloBuscado = scan.nextLine();
         
-        try {
-            Carro setCarro = this.busca(modeloBuscado, mapaDeCarros);
-            
+        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
+
+        carro.ifPresent(carroEncontrado -> {
             System.out.println("Digite o novo modelo\n(deixe vazio para não alterar):");
             String novoModelo = scan.nextLine();
             System.out.println("Digite a nova marca\n(deixe vazio para não alterar):");
@@ -113,30 +119,28 @@ public class CRUD {
             String novoAnoStr = scan.nextLine();
 
             if (!novoModelo.isEmpty()) {
-                setCarro.setModelo(novoModelo);
+                carroEncontrado.setModelo(novoModelo);
             }
             if (!novaMarca.isEmpty()) {
-                setCarro.setMarca(novaMarca);
+                carroEncontrado.setMarca(novaMarca);
             }
             if (!novoAnoStr.isEmpty()) {
                 try {
                     int novoAno = Integer.parseInt(novoAnoStr);
-                    setCarro.setAno(novoAno);
+                    carroEncontrado.setAno(novoAno);
                 } catch (NumberFormatException e) {
                     System.out.println("Ano inválido. O ano não foi alterado.");
                 }
             }
             System.out.println("Carro atualizado com sucesso!");
-            System.out.println("Novos dados: " + setCarro);
+            System.out.println("Novos dados: " + carroEncontrado);
 
-            String mensagemLog = "CARRO "+ setCarro.getModelo() +" ALTERADO";
-            Tools.log(mensagemLog);
+            Tools.log("CARRO "+ carroEncontrado.getModelo() +" ALTERADO");
+        });
 
-        } catch (CarroNaoEncontradoException e) {
+        if(carro.isEmpty()){
             System.out.println("Carro não encontrado.");
-
-            String mensagemLog = "FALHA DA ALTERAÇÃO DO CARRO " + modeloBuscado;
-            Tools.log(mensagemLog);
+            Tools.log("FALHA DA ALTERAÇÃO DO CARRO " + modeloBuscado);
         }
     }
 
@@ -145,21 +149,18 @@ public class CRUD {
         System.out.println("Digite o modelo do carro que deseja remover:");
         String modeloBuscado = scan.nextLine();
         
-        try {
-            this.busca(modeloBuscado, mapaDeCarros);
-
+        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
+        
+        carro.ifPresent(carroEncontrado -> {
             mapaDeCarros.remove(modeloBuscado);
             System.out.println("Carro removido.");
 
-            String mensagemLog = "CARRO " + modeloBuscado + " REMOVIDO";
-            Tools.log(mensagemLog);
+            Tools.log("CARRO " + modeloBuscado + " REMOVIDO");
+        });
 
-        } catch (CarroNaoEncontradoException e) {
+        if(carro.isEmpty()){
             System.out.println("Carro não encontrado.");
-
-            String mensagemLog = "FALHA NA REMOÇÂO DO MODELO " + modeloBuscado;
-            Tools.log(mensagemLog);
+            Tools.log("FALHA NA REMOÇÂO DO MODELO " + modeloBuscado);
         }
-
     }
 }
