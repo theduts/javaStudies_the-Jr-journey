@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public class CRUD {
 
-    Scanner scan = new Scanner(System.in);
+    private final Scanner scan;
+
+    public CRUD(Scanner injectedScan){
+        this.scan = injectedScan;
+    }
 
     // --------------------------------------------------CREATE
     public void createCarro(Map<String, Carro> mapaDeCarros) {
