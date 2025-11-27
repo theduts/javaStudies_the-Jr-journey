@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        Tools.limparTela();
         String caminhoArquivo = "src/data/carros.csv";
         Menu menu = new Menu();    
         HashMap<String, Carro> mapaDeCarros = CarroLoader.carregarCarros(caminhoArquivo);

@@ -44,7 +44,7 @@ public class Tools {
     public static void salvarDados(Map<String, Carro> mapaDeCarros, String caminhoArquivo){
         StringBuilder sb = new StringBuilder();
 
-        sb.append("modelo,marca,ano,dataDeCadastro\n");
+        sb.append("tipo,modelo,marca,ano,tipoVeiculo,dataDeCadastro,cilindrada\n");
         
         for(Carro carro : mapaDeCarros.values()){
             sb.append(carro.toFileString()).append("\n");

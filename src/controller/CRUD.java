@@ -3,7 +3,7 @@ import java.util.Scanner;
 import model.Carro;
 import utils.Tools;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,6 +22,8 @@ public class CRUD {
         LocalDate anoDeCadastro = LocalDate.now();
         System.out.println("Digite o modelo do carro:");
         String novoModelo = scan.nextLine();
+        System.out.println("Digite o tipo do carro:");
+        String novoTipoCarro = scan.nextLine();
         System.out.println("Digite a marca do carro:");
         String novaMarca = scan.nextLine();
 
@@ -41,7 +43,7 @@ public class CRUD {
             }
         }
 
-        Carro novoCarro = new Carro(novoModelo, novaMarca, novoAno, anoDeCadastro);
+        Carro novoCarro = new Carro(novoTipoCarro, novoModelo, novaMarca, novoAno, anoDeCadastro);
         mapaDeCarros.put(novoModelo, novoCarro);
         System.out.println("Carro cadastrado.");
         
@@ -57,16 +59,9 @@ public class CRUD {
     
     public void imprimirInfo(Carro carroAlvo) {
         String modelo = carroAlvo.getModelo();
-        String marca = carroAlvo.getMarca();
-        int ano = carroAlvo.getAno();
-        LocalDate dataCadastro = carroAlvo.getDataCadastro();
 
         System.out.println("----- Informações do " + modelo + " -----");
-        System.out.println("Modelo: " + modelo);
-        System.out.println("Marca: " + marca);
-        System.out.println("Ano: " + ano);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        System.out.println("Data do cadastro: " + dataCadastro.format(formatter));
+        System.out.println(carroAlvo);
         System.out.println("-".repeat(33));
     }
 
