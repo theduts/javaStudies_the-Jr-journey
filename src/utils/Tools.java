@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import model.Carro;
+import model.Veiculo;
 
 
 public class Tools {
@@ -27,7 +27,7 @@ public class Tools {
     }
 
     public static void log(String mensagem){
-        String caminhoArquivo = "C:\\Users\\win 10\\Desktop\\javaStudies\\javaStudies\\src\\data\\log.txt";
+        String caminhoArquivo = "src/data/log.txt";
 
         try (FileWriter writer = new FileWriter(caminhoArquivo, true) ; BufferedWriter bw = new BufferedWriter(writer)){
             DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -41,13 +41,13 @@ public class Tools {
         }
     }
 
-    public static void salvarDados(Map<String, Carro> mapaDeCarros, String caminhoArquivo){
+    public static void salvarDados(Map<String, Veiculo> mapaDeVeiculos, String caminhoArquivo){
         StringBuilder sb = new StringBuilder();
 
         sb.append("tipo,modelo,marca,ano,tipoVeiculo,dataDeCadastro,cilindrada\n");
         
-        for(Carro carro : mapaDeCarros.values()){
-            sb.append(carro.toFileString()).append("\n");
+        for(Veiculo veiculo : mapaDeVeiculos.values()){
+            sb.append(veiculo.toFileString()).append("\n");
         }
 
         try {

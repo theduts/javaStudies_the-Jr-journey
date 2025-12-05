@@ -19,11 +19,11 @@ public class Caminhao extends Veiculo{
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return "Modelo: " + this.modelo + "\nMarca: " + this.marca + "\nAno: " + this.ano + "\nData de cadastro: " + this.dataCadastro.format(formatter);
+        return "Modelo: " + this.modelo + "\nMarca: " + this.marca + "\nAno: " + this.ano + "\nTipo: "+ this.tipoCaminhao + "\nData de cadastro: " + this.dataCadastro.format(formatter);
     }
 
     public String toFileString() {
-        // Retorna uma string simples no formato CSV - Ex: "Fusca,Volkswagen,1996,2025-11-17"
-        return this.modelo + "," + this.marca + "," + this.ano + "," + this.dataCadastro;
+        //      tipo,             modelo,             marca,             ano,             tipoVeiculo,        dataDeCadastro
+        return "caminhao," + this.modelo + "," + this.marca + "," + this.ano + "," + this.tipoCaminhao + "," + this.dataCadastro + ",";
     }
 }

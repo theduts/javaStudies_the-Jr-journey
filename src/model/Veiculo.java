@@ -50,4 +50,8 @@ public abstract class Veiculo {
         return this.dataCadastro;
     }
 
+    //-------------------------------------MÉTODOS
+
+    public abstract String toFileString();
+
 }

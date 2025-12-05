@@ -1,115 +1,152 @@
 package controller;
 import java.util.Scanner;
+
+import model.Caminhao;
 import model.Carro;
+import model.Moto;
+import model.Veiculo;
 import utils.Tools;
 import java.time.LocalDate;
-//import java.time.format.DateTimeFormatter;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
-public class CRUD {
+public class CRUD{
+
+    private HashMap<String, Veiculo> veiculos;
 
     private final Scanner scan;
 
-    public CRUD(Scanner injectedScan){
+    public CRUD(Scanner injectedScan, HashMap<String, Veiculo> mapaDeVeiculos){
         this.scan = injectedScan;
+        this.veiculos = mapaDeVeiculos;
     }
 
     // --------------------------------------------------CREATE
-    public void createCarro(Map<String, Carro> mapaDeCarros) {
+    public void createVeiculo() {
         
         
         LocalDate anoDeCadastro = LocalDate.now();
-        System.out.println("Digite o modelo do carro:");
+        System.out.println("Tipo do veículo\nCarro (A)\nMoto (B)\nCaminhão (C)(OPÇÃO NÃO ADICIONADA)");
+        String tipo = scan.nextLine();
+        System.out.println("Digite o modelo:");
         String novoModelo = scan.nextLine();
-        System.out.println("Digite o tipo do carro:");
-        String novoTipoCarro = scan.nextLine();
-        System.out.println("Digite a marca do carro:");
+        System.out.println("Digite o tipo:");
+        String novoTipoVeiculo = scan.nextLine();
+        System.out.println("Digite a marca:");
         String novaMarca = scan.nextLine();
 
         int novoAno = 0;
-        boolean inputValido = false;
+        boolean inputAnoValido = false;
 
-        while(!inputValido){
-            System.out.println("Digite o ano do carro:");
+        while(!inputAnoValido){
+            System.out.println("Digite o ano do veículo:");
             String anoString = scan.nextLine();
 
             try {
                 novoAno = Integer.parseInt(anoString);
-                inputValido = true;
+                inputAnoValido = true;
             } catch (Exception e) {
                 System.out.println("O ano deve ser um número!");
                 scan.nextLine();
             }
         }
 
-        Carro novoCarro = new Carro(novoTipoCarro, novoModelo, novaMarca, novoAno, anoDeCadastro);
-        mapaDeCarros.put(novoModelo, novoCarro);
-        System.out.println("Carro cadastrado.");
+        int novoCilindrada = 0;
+        if(tipo.equalsIgnoreCase("B")){
+            boolean inputCilindradaValido = false;
+
+            while(!inputCilindradaValido){
+                System.out.println("Digite a cilindrada da moto:");
+                String cilindradaString = scan.nextLine();
+
+                try {
+                    novoCilindrada = Integer.parseInt(cilindradaString);
+                    inputCilindradaValido = true;
+                } catch (Exception e) {
+                    System.out.println("O ano deve ser um número!");
+                    scan.nextLine();
+                }
+            }
+
+            Moto novaMoto = new Moto(tipo, novoCilindrada, novoModelo, novaMarca, novoAno, anoDeCadastro);
+            this.veiculos.put(novoModelo, novaMoto);
+
+        }else if(tipo.equalsIgnoreCase("A")){
+
+            Carro novoCarro = new Carro(novoTipoVeiculo, novoModelo, novaMarca, novoAno, anoDeCadastro);
+            this.veiculos.put(novoModelo, novoCarro);
+            
+        }else{
+
+            Caminhao novoCaminhao = new Caminhao(novoTipoVeiculo, novoModelo, novaMarca, novoAno, anoDeCadastro);
+            this.veiculos.put(novoModelo, novoCaminhao);
+        }
         
-        Tools.log("CARRO "+ novoModelo +" CRIADO");
+        System.out.println("Veículo cadastrado.");
+        
+        Tools.log("VEICULO "+ novoModelo +" CRIADO");
     }
 
     // --------------------------------------------------READ
     
-    public Optional<Carro> busca(String modeloBuscado, Map<String, Carro> mapaDeCarros){
-        Carro carro = mapaDeCarros.get(modeloBuscado);
-        return Optional.ofNullable(carro);
+    public Optional<Veiculo> busca(String modeloBuscado){
+        Veiculo veiculo = this.veiculos.get(modeloBuscado);
+        return Optional.ofNullable(veiculo);
     }
     
-    public void imprimirInfo(Carro carroAlvo) {
-        String modelo = carroAlvo.getModelo();
+    public void imprimirInfo(Veiculo veiculoAlvo) {
+        String modelo = veiculoAlvo.getModelo();
 
         System.out.println("----- Informações do " + modelo + " -----");
-        System.out.println(carroAlvo);
+        System.out.println(veiculoAlvo);
         System.out.println("-".repeat(33));
     }
 
-    public void readCarro(Map<String, Carro> mapaDeCarros) {
-        System.out.println("Digite o modelo do carro que deseja buscar:");
+    public void readVeiculo() {
+        System.out.println("Digite o modelo do veículo que deseja buscar:");
         String modeloBuscado = scan.nextLine();
         
-        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
+        Optional<Veiculo> veiculo = this.busca(modeloBuscado);
 
-        carro.ifPresent(carroEncontrado -> {
+        veiculo.ifPresent(carroEncontrado -> {
             this.imprimirInfo(carroEncontrado);
-            Tools.log("CARRO "+ carroEncontrado.getModelo() +" BUSCADO");
+            Tools.log("VEÍCULO "+ carroEncontrado.getModelo() +" BUSCADO");
 
         });
 
-        if(carro.isEmpty()){
-            System.out.println("Carro não encontrado.");
+        if(veiculo.isEmpty()){
+            System.out.println("Veículo não encontrado.");
             
-            Tools.log("FALHA NO BUSCA DO CARRO");
+            Tools.log("FALHA NO BUSCA DO VEÍCULO");
         }
     }
 
-    public void readTodosOsCarros(Map<String, Carro> mapaDeCarros) {
-        System.out.println("---- Informações dos carros ----");
-        mapaDeCarros.forEach((modelo, carro) -> System.out.println(carro + "\n" + "-".repeat(30)));
+    public void readTodosOsVeiculos() {
+        System.out.println("---- Informações dos veículos ----");
+        this.veiculos.forEach((modelo, carro) -> System.out.println(carro + "\n" + "-".repeat(30)));
     
-        Tools.log("TODOS OS CARROS BUSCADOS");
+        Tools.log("TODOS OS VEÍCULOS BUSCADOS");
     }
     
-    public void readCarrosPorMarca(Map<String, Carro> mapaDeCarros){
-        System.out.println("Digite a marca dos carros que deseja buscar:");
+    public void readVeiculosPorMarca(){
+        System.out.println("Digite a marca dos veículos que deseja buscar:");
         String marcaBuscada = scan.nextLine();
         
-        mapaDeCarros.values().stream()
+        this.veiculos.values().stream()
             .filter(c -> c.getMarca().equalsIgnoreCase(marcaBuscada))
             .forEach(System.out::println);
 
-        Tools.log("CARROS DA MARCA "+ marcaBuscada +" BUSCADOS");
+        Tools.log("VEÍCULOS DA MARCA "+ marcaBuscada +" BUSCADOS");
     }
 
     // --------------------------------------------------UPDATE
-    public void updateCarro(Map<String, Carro> mapaDeCarros) {
-        System.out.println("Digite o modelo do carro que deseja alterar:");
+    public void updateVeiculo() {
+        System.out.println("Digite o modelo do veículo que deseja alterar:");
         String modeloBuscado = scan.nextLine();
         
-        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
+        Optional<Veiculo> veiculo = this.busca(modeloBuscado);
 
-        carro.ifPresent(carroEncontrado -> {
+        veiculo.ifPresent(veiculoEncontrado -> {
             System.out.println("Digite o novo modelo\n(deixe vazio para não alterar):");
             String novoModelo = scan.nextLine();
             System.out.println("Digite a nova marca\n(deixe vazio para não alterar):");
@@ -118,48 +155,49 @@ public class CRUD {
             String novoAnoStr = scan.nextLine();
 
             if (!novoModelo.isEmpty()) {
-                carroEncontrado.setModelo(novoModelo);
+                veiculoEncontrado.setModelo(novoModelo);
             }
             if (!novaMarca.isEmpty()) {
-                carroEncontrado.setMarca(novaMarca);
+                veiculoEncontrado.setMarca(novaMarca);
             }
             if (!novoAnoStr.isEmpty()) {
                 try {
                     int novoAno = Integer.parseInt(novoAnoStr);
-                    carroEncontrado.setAno(novoAno);
+                    veiculoEncontrado.setAno(novoAno);
                 } catch (NumberFormatException e) {
                     System.out.println("Ano inválido. O ano não foi alterado.");
                 }
             }
-            System.out.println("Carro atualizado com sucesso!");
-            System.out.println("Novos dados: " + carroEncontrado);
+            System.out.println("Veículo atualizado com sucesso!");
+            System.out.println("Novos dados: " + veiculoEncontrado);
 
-            Tools.log("CARRO "+ carroEncontrado.getModelo() +" ALTERADO");
+            Tools.log("VEÍCULO "+ veiculoEncontrado.getModelo() +" ALTERADO");
         });
 
-        if(carro.isEmpty()){
-            System.out.println("Carro não encontrado.");
-            Tools.log("FALHA DA ALTERAÇÃO DO CARRO " + modeloBuscado);
+        if(veiculo.isEmpty()){
+            System.out.println("Veículo não encontrado.");
+            Tools.log("FALHA DA ALTERAÇÃO DO VEÍCULO " + modeloBuscado);
         }
     }
 
     // --------------------------------------------------DELETE
-    public void deleteCarro(Map<String, Carro> mapaDeCarros) {
-        System.out.println("Digite o modelo do carro que deseja remover:");
+    public void deleteVeiculo() {
+        System.out.println("Digite o modelo do veículo que deseja remover:");
         String modeloBuscado = scan.nextLine();
         
-        Optional<Carro> carro = this.busca(modeloBuscado, mapaDeCarros);
+        Optional<Veiculo> veiculo = this.busca(modeloBuscado);
         
-        carro.ifPresent(carroEncontrado -> {
-            mapaDeCarros.remove(modeloBuscado);
-            System.out.println("Carro removido.");
+        veiculo.ifPresent(veiculoEncontrado -> {
+            this.veiculos.remove(modeloBuscado);
+            System.out.println("Veículo removido.");
 
-            Tools.log("CARRO " + modeloBuscado + " REMOVIDO");
+            Tools.log("VEICULO " + modeloBuscado + " REMOVIDO");
         });
 
-        if(carro.isEmpty()){
-            System.out.println("Carro não encontrado.");
+        if(veiculo.isEmpty()){
+            System.out.println("Veículo não encontrado.");
             Tools.log("FALHA NA REMOÇÂO DO MODELO " + modeloBuscado);
         }
     }
 }
+//adicionando comentário só pra dar um commit correto

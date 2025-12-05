@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import controller.CRUD;
-import model.Carro;
-import utils.CarroLoader;
+import model.Veiculo;
+import utils.VeiculoLoader;
 import utils.Tools;
 import view.Menu;
 import java.util.HashMap;
@@ -11,16 +11,16 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) throws Exception {
         Tools.limparTela();
-        String caminhoArquivo = "src/data/carros.csv";
+        String caminhoArquivo = "src/data/veiculos.csv";
         Menu menu = new Menu();    
-        HashMap<String, Carro> mapaDeCarros = CarroLoader.carregarCarros(caminhoArquivo);
+        HashMap<String, Veiculo> mapaDeVeiculos = VeiculoLoader.carregarVeiculos(caminhoArquivo);
     
         int opcao = 0;
         try (Scanner scan = new Scanner(System.in);) {
 
-            CRUD crud = new CRUD(scan);
+            CRUD crud = new CRUD(scan, mapaDeVeiculos);
 
-            if(!mapaDeCarros.isEmpty()){
+            if(!mapaDeVeiculos.isEmpty()){
                 while (opcao != 7) {
                     menu.mostrarMenu();
                     opcao = scan.nextInt();
@@ -28,37 +28,37 @@ public class Main {
         
                     switch (opcao) {
                         case 1:
-                            crud.readTodosOsCarros(mapaDeCarros);
+                            crud.readTodosOsVeiculos();
                             scan.nextLine();
                             break;
         
                         case 2:
-                            crud.readCarro(mapaDeCarros);
+                            crud.readVeiculo();
                             scan.nextLine();
                             break;
         
                         case 3:
-                            crud.createCarro(mapaDeCarros);
+                            crud.createVeiculo();
                             scan.nextLine();
                             break;
         
                         case 4:
-                            crud.updateCarro(mapaDeCarros);
+                            crud.updateVeiculo();
                             scan.nextLine();
                             break;
         
                         case 5:
-                            crud.deleteCarro(mapaDeCarros);
+                            crud.deleteVeiculo();
                             scan.nextLine();
                             break;
         
                         case 6:
-                            crud.readCarrosPorMarca(mapaDeCarros);
+                            crud.readVeiculosPorMarca();
                             scan.nextLine();
                             break;
                         
                         case 7:
-                            Tools.salvarDados(mapaDeCarros, caminhoArquivo);
+                            Tools.salvarDados(mapaDeVeiculos, caminhoArquivo);
                             break;
         
                         default:

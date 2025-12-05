@@ -5,13 +5,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+
+import model.Caminhao;
 import model.Carro;
 import model.Moto;
+import model.Veiculo;
 
-public class CarroLoader {
+public class VeiculoLoader {
 
-    public static HashMap<String, Carro> carregarCarros(String caminhoArquivo){
-        HashMap<String, Carro> mapaDeCarros = new HashMap<>();
+    public static HashMap<String, Veiculo> carregarVeiculos(String caminhoArquivo){
+        HashMap<String, Veiculo> mapaDeVeiculos = new HashMap<>();
         
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
@@ -45,10 +48,13 @@ public class CarroLoader {
 
                 if(tipo.equalsIgnoreCase("CARRO")){
                     Carro carro = new Carro(tipoCarro, modelo, marca, ano, dataCadastro);
-                    mapaDeCarros.put(modelo, carro);
+                    mapaDeVeiculos.put(modelo, carro);
                 }else if(tipo.equalsIgnoreCase("MOTO")){
                     Moto moto = new Moto(tipoCarro, cilindrada, modelo, marca, ano, dataCadastro);
-                    //mapaDeCarros.put(modelo, moto);
+                    mapaDeVeiculos.put(modelo, moto);
+                }else{
+                    Caminhao caminhao = new Caminhao(tipoCarro, modelo, marca, ano, dataCadastro);
+                    mapaDeVeiculos.put(modelo, caminhao);
                 }
             }
 
@@ -58,7 +64,7 @@ public class CarroLoader {
             System.out.println("Erro ao converter ano em número: " + e.getMessage());
         }
 
-        return mapaDeCarros;
+        return mapaDeVeiculos;
     }
     
 }

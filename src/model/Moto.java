@@ -9,7 +9,6 @@ public class Moto extends Veiculo{
 
     public Moto(String tipoMoto, int cilindrada, String modelo, String marca, int ano, LocalDate dataCadastro) {
         super(modelo, marca, ano, dataCadastro);
-        this.tipoVeiculo = "Moto";
         this.tipoMoto = tipoMoto;
         this.cilindrada = cilindrada;
     }
@@ -28,10 +27,9 @@ public class Moto extends Veiculo{
     }
 
     public String toFileString() {
-        // Retorna uma string simples no formato CSV - Ex: "Fusca,Volkswagen,1996,2025-11-17"
-        return this.tipoVeiculo + "," +this.modelo + "," + this.marca + "," + this.ano + "," + this.dataCadastro + "," + this.cilindrada + ",";
+        //      tipo,        modelo,              marca,             ano,           tipoVeiculo,          dataDeCadastro,             cilindrada
+        return "moto," + this.modelo + "," + this.marca + "," + this.ano + "," + this.tipoMoto + "," + this.dataCadastro + "," + this.cilindrada;
     }
 }
 
 
-//tipo,modelo,marca,ano,tipoVeiculo,dataDeCadastro,cilindrada
