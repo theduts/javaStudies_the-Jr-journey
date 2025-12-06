@@ -27,7 +27,7 @@ public class Tools {
     }
 
     public static void log(String mensagem){
-        String caminhoArquivo = "src/data/log.txt";
+        String caminhoArquivo = "javaStudies_the-Jr-journey\\src\\data\\log.txt";
 
         try (FileWriter writer = new FileWriter(caminhoArquivo, true) ; BufferedWriter bw = new BufferedWriter(writer)){
             DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -54,11 +54,11 @@ public class Tools {
             Path caminho = Paths.get(caminhoArquivo);
             Files.writeString(caminho, sb.toString());
             
-            String mensagemLog = "CARROS SALVOS";
+            String mensagemLog = "VEICULOS SALVOS";
             Tools.log(mensagemLog);
 
         } catch (Exception e) {
-            String mensagemLog = "FALHA AO SALVAR CARROS: " + e.getMessage();
+            String mensagemLog = "FALHA AO SALVAR VEICULOS: " + e.getMessage();
             Tools.log(mensagemLog);
         }
     }

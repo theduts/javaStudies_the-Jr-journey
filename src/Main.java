@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) throws Exception {
         Tools.limparTela();
-        String caminhoArquivo = "src/data/veiculos.csv";
+        String caminhoArquivo = "javaStudies_the-Jr-journey\\src\\data\\veiculos.csv";
         Menu menu = new Menu();    
         HashMap<String, Veiculo> mapaDeVeiculos = VeiculoLoader.carregarVeiculos(caminhoArquivo);
     

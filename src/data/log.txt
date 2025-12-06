@@ -33,9 +33,6 @@
 26/11/2025 23:11:41: CARROS SALVOS
 26/11/2025 23:13:46: CARROS SALVOS
 26/11/2025 23:13:58: CARROS SALVOS
-<<<<<<< HEAD
-26/11/2025 23:15:35: CARROS SALVOS
-=======
 26/11/2025 23:15:35: CARROS SALVOS
 03/12/2025 01:15:54: TODOS OS CARROS BUSCADOS
 03/12/2025 01:15:57: CARROS SALVOS
@@ -67,4 +64,3 @@
 03/12/2025 03:04:55: CARROS SALVOS
 03/12/2025 03:05:06: TODOS OS CARROS BUSCADOS
 03/12/2025 03:05:20: CARROS SALVOS
->>>>>>> 14e92d9 (update: GENERICS finally added: now we can add bikes, trucks and cars (still needs refinements such as new menus and features) | code refactor to accept the generics logic | CSV have bikes and trucks itens now)
